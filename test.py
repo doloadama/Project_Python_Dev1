@@ -1,4 +1,5 @@
 import csv
+import datetime as date
 
 def number(num):
     """
@@ -16,6 +17,15 @@ def number(num):
     num : the number to be checked
     """
     return num.isalnum() and len(num) == 7 and num.isupper()
+
+def format_date(periode):
+    """Fonction qui va se charger de régler le format des dates"""
+    with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv', 'r') as f:
+        ligne = csv.DictReader(f, ",")
+    dates = []
+    for date in ligne:
+        dates.append(date(ligne['Date de naissance']))
+
 
 def compte_lettres(mot):
     """
@@ -65,4 +75,6 @@ with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_D
             valide.append
         else:
             invalide.append(ligne)
+
+
 
