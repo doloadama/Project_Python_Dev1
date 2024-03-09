@@ -71,7 +71,7 @@ valide, invalide = [], []
 with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv', 'r') as f:
 
     # Création et affectation d'un lecteur CSV
-    lecteur = csv.DictReader(f, delimiter=',')
+    lecteur = csv.DictReader(f)
 
     # Lecture par ligne et vérification de la validité du numéro
     for ligne in lecteur:
