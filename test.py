@@ -18,13 +18,27 @@ def number(num):
     """
     return num.isalnum() and len(num) == 7 and num.isupper()
 
-def format_date(periode):
-    """Fonction qui va se charger de régler le format des dates"""
-    with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv', 'r') as f:
-        ligne = csv.DictReader(f, ",")
-    dates = []
-    for date in ligne:
-        dates.append(date(ligne['Date de naissance']))
+def is_valid_date(date_str):
+    try:
+        date.strptime(date_str)
+        return True
+    except ValueError:
+        return False
+
+# Fonction pour convertir les dates au format YYYY-MM-DD
+def format_date(date_str):
+        # Liste de formats de date possibles
+        formats = ["%d/%m/%y", "%d/%m/%Y", "%m/%d/%y", "%m/%d/%Y", "%dm%Y", "%d %b %Y", "%H:%M:%S"]
+
+        #Convertir la date avec différents formats
+        for fmt in formats:
+            try:
+                date_obj = date.datetime.strptime(date_str, fmt)
+                return date_obj.strftime("%Y-%m-%d")
+            except ValueError:
+                continue
+        # Si aucun format ne correspond, retournez la date d'origine
+        return date_str
 
 
 def compte_lettres(mot):
@@ -75,6 +89,3 @@ with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_D
             valide.append
         else:
             invalide.append(ligne)
-
-
-
