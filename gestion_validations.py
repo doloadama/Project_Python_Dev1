@@ -97,11 +97,6 @@ def traiter_donnees(filename='/home/adama/Documents/Project_Python_Dev1/Donnees_
         # Lecture par ligne et vérification de la validité des données
         # Lecture par ligne et vérification de la validité des données
         for ligne in data:
-            ligne['Date de naissance'].strip()
-            
-            
-        
-        for ligne in data:
             if (valider_numero(ligne['Numero']) and valider_prenom(ligne['Prénom']) and
                 valider_nom(ligne['Nom']) and est_date_valide(ligne['Date de naissance']) and
                 format_classe(ligne['Classe']) and valider_notes(ligne['Notes'])):
@@ -114,6 +109,14 @@ def traiter_donnees(filename='/home/adama/Documents/Project_Python_Dev1/Donnees_
 filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'
 
 
+"""else:"""
+
+
 valide = []
 invalide = []
 
+valide, invalide = traiter_donnees(filename)
+
+print(valide)
+print("\n"*3)
+print(invalide)
