@@ -11,32 +11,59 @@ def valider_prenom(prenom):
 def valider_nom(nom):
     return nom[0].isalpha() and len(nom) >= 2
 
-def valider_date_naissance(date_str):
-    try:
-        datetime.datetime.strptime(date_str, "%d/%m/%Y")
-        return True
-    except ValueError:
-        return False
-
-def convertir_format(chaine, format_source, format_cible="%d %b %Y"):
+def changer_format_date(date_str):
     """
-    Fonction pour convertir une chaîne de caractères d'un format source à un format cible.
+    Fonction pour changer le format d'une date.
 
-    Retourne:
-        str: La chaîne de caractères convertie dans le format cible.
+    Args:
+        date_str (str): La date à convertir au format de chaîne de caractères.
+
+    Returns:
+        str: La date convertie dans un nouveau format, ou None si une erreur se produit.
     """
     try:
-        # Convertir la chaîne de caractères du format source au format datetime
-        date_obj = datetime.datetime.strptime(chaine, format_source)
+        # Convertir la date en objet datetime avec l'ancien format "%d/%m/%Y"
+        date_obj = datetime.datetime.strptime(date_str, "%d/%m/%Y")
         
-        # Formater la date dans le format cible
-        chaine_convertie = date_obj.strftime(format_cible)
+        # Changer le format de la date au format "%Y-%m-%d"
+        formatted_date = date_obj.strftime("%Y-%m-%d")
         
-        return chaine_convertie
+        return formatted_date
     
     except ValueError:
-        # Si une erreur se produit lors de la conversion, retourner la chaîne d'origine
-        return chaine
+        # Si une erreur se produit lors de la conversion, retourner None
+        return date_str
+
+def est_date_valide(date_str):
+    """
+    Fonction pour vérifier si une date est valide.
+
+    Args:
+        date_str: La date à vérifier sous forme de chaîne de caractères.
+
+    Returns:
+        True si la date est valide, False sinon.
+    """
+    date_formats = ["%d/%m/%y", "%d/%m/%Y", "%d %m %Y", "%d %B %Y", "%d,%m,%Y", "%d:%m:%Y", "%d-%m-%Y", "%d|%m|%Y", "%d.%m.%Y",
+                    "%d/%B/%Y", "%d.%B.%Y", "%d-%B-%Y", "%d:%B:%Y", "%d_%m_%Y", "%d-%m-%y", "%d %m %y", "%d %B %y", "%d,%m,%y",
+                    "%d:%m:%y", "%d|%m|%y", "%d|%B|%y", "%d.%m.%y", "%d.%B.%y", "%d-%B-%y", "%d:%B:%y", "%d_%m_%y", "%m/%d/%y",
+                    "%m/%d/%Y", "%m-%d-%Y", "%m-%d-%y", "%Y-%m-%d", "%d-%m-%y", "%d %m %Y", "%d %B %Y", "%d,%m,%Y", "%d:%m:%Y",
+                    "%d/%m/%y", "%d-%m-%y", "%d %m %y", "%d %B %y", "%d,%m,%y", "%d:%m:%y", "%d|%m|%y", "%d|%B|%y", "%d.%m.%y",
+                    "%d.%B.%y", "%d-%B-%y", "%d:%B:%y", "%d,%B,%y", "%d/%B/%y", "%d.%B.%y", "%d|%B|%Y", "%d-%B-%Y", "%d:%B:%Y",
+                    "%d_%m_%y", "%d_%m_%Y", "%d-%B-%Y", "%d-%m-%Y"
+                    ]
+
+    for format_str in date_formats:
+        try:
+            # Tenter de convertir la chaîne de caractères en objet datetime
+            datetime.datetime.strptime(date_str, format_str)
+            return True  # La conversion a réussi, la date est valide
+        except ValueError:
+            pass  # Si une erreur de conversion se produit, essayer le format suivant
+
+    # Si aucun format ne fonctionne, la date n'est pas valide
+    return False
+
 
 def valider_classe(classe):
     classe.strip()
@@ -76,7 +103,7 @@ def traiter_donnees(filename='/home/adama/Documents/Project_Python_Dev1/Donnees_
         
         for ligne in data:
             if (valider_numero(ligne['Numero']) and valider_prenom(ligne['Prénom']) and
-                valider_nom(ligne['Nom']) and valider_date_naissance(ligne['Date de naissance']) and
+                valider_nom(ligne['Nom']) and est_date_valide(ligne['Date de naissance']) and
                 format_classe(ligne['Classe']) and valider_notes(ligne['Notes'])):
                 donnees_valides.append(ligne)
             else:
@@ -90,4 +117,3 @@ filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Da
 valide = []
 invalide = []
 
-""
