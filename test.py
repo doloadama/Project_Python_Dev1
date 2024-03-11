@@ -1,5 +1,47 @@
 import csv
-import datetime as date
+import datetime
+
+def changer_format_date(date_str):
+    """
+    Fonction pour changer le format d'une date.
+
+    Args:
+        date_str (str): La date à convertir au format de chaîne de caractères.
+
+    Returns:
+        str: La date convertie dans un nouveau format, ou None si une erreur se produit.
+    """
+    try:
+        # Convertir la date en objet datetime avec l'ancien format "%d/%m/%Y"
+        date_obj = datetime.datetime.strptime(date_str, "%d/%m/%Y")
+        
+        # Changer le format de la date au format "%Y-%m-%d"
+        formatted_date = date_obj.strftime("%Y-%m-%d")
+        
+        return formatted_date
+    
+    except ValueError:
+        # Si une erreur se produit lors de la conversion, retourner None
+        return date_str
+
+def est_date_valide(date_str):
+    """
+    Fonction pour vérifier si une date est valide.
+
+    Args:
+        date_str: La date à tester sous forme de chaîne de caractères.
+
+    Returns:
+        True si la date est valide, False sinon.
+    """
+
+    try:
+        # Convertir la date en format datetime
+        datetime.datetime.strptime(date_str, "%d/%m/%Y")
+        return True
+    except ValueError:
+        # La date n'est pas au format attendu
+        return False
 
 def number(num):
     """
@@ -18,29 +60,6 @@ def number(num):
     """
     return num.isalnum() and len(num) == 7 and num.isupper()
 
-def is_valid_date(date_str):
-    try:
-        date.strptime(date_str)
-        return True
-    except ValueError:
-        return False
-
-# Fonction pour convertir les dates au format YYYY-MM-DD
-def format_date(date_str):
-        # Liste de formats de date possibles
-        formats = ["%d/%m/%y", "%d/%m/%Y", "%m/%d/%y", "%m/%d/%Y", "%dm%Y", "%d %b %Y", "%H:%M:%S"]
-
-        #Convertir la date avec différents formats
-        for fmt in formats:
-            try:
-                date_obj = date.datetime.strptime(date_str, fmt)
-                return date_obj.strftime("%Y-%m-%d")
-            except ValueError:
-                continue
-        # Si aucun format ne correspond, retournez la date d'origine
-        return date_str
-
-
 def compte_lettres(mot):
     """
     Function that takes a parameter and return the number of letters in that parameter
@@ -55,7 +74,6 @@ def compte_lettres(mot):
             continue
     return compte
 
-
 def name(nom):
     debut = nom[0]
     return debut.isalpha() and compte_lettres(nom) >= 2
@@ -64,28 +82,36 @@ def firstname(prenom):
     debut = prenom[0]
     return debut.isalpha() and compte_lettres(prenom) >= 3
 
+def gestion_notes(notes):
+
+# Ouvrir le fichier en mode lecture et le lire
 # Création de deux listes qui contiendront les lignes valides et invalides
 valide, invalide = [], []
 
+def format_classe(classe):
+    classe.strip()
+    if classe[0].isdigit():
+        classe.replace("i", "")
+        nouvelle_classe = classe[0:2] + "e" + classe[4:]
+
 # Ouvrir le fichier en mode lecture et le lire
 with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv', 'r') as f:
+    # Créer un lecteur CSV qui permet de lire ligne par ligne le fichier
+    lecteur = csv.DictReader(f, dialect='unix')
 
-    # Création et affectation d'un lecteur CSV
-    lecteur = csv.DictReader(f)
-
-    # Lecture par ligne et vérification de la validité du numéro
+    # Lecture par ligne et vérification de la validité des données
+    # Lecture par ligne et vérification de la validité des données
     for ligne in lecteur:
-        #On vérifie que la colonne numéro est valide
-        if ligne.items == "":
-            invalide.append(ligne)
-        else:
-            valide.append(ligne)
-        if number(ligne['Numero']):
-            valide.append(ligne)
-        else:
-            invalide.append(ligne)
-        #Vérification de la validité des noms et prénoms
-        if name(ligne(['Nom'])) and firstname(ligne['Prenom']):
-            valide.append
-        else:
-            invalide.append(ligne)
+        valide.append(ligne)
+        
+        
+
+print("Les données valides: ")
+for a in valide:
+  print(a['Note'])
+
+print()
+
+"""print("Les données invalides: ")
+for a in invalide:
+  print(a['Date de naissance'])"""
