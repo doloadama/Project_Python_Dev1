@@ -25,10 +25,6 @@ def changer_format_date(date_str):
         # Si une erreur se produit lors de la conversion, retourner None
         return date_str
 
-def valide_note(note):
-    bonne_note = re.match("[\d|\d:\d]", note)
-    return bonne_note
-
 def est_date_valide(date_str):
     """
     Fonction pour vérifier si une date est valide.
@@ -121,28 +117,48 @@ def firstname(prenom):
     debut = prenom[0]
     return debut.isalpha() and compte_lettres(prenom) >= 3
 
-def extraire_notes(chaine):
-    # Diviser la chaîne en fonction du séparateur '#'
-    matieres = chaine.split('#')
-    
-    notes_matiere = {}
-    
-    for matiere in matieres:
-        # Diviser chaque matière en fonction du séparateur '['
-        nom_et_notes = matiere.split('[')
-        if len(nom_et_notes) > 1:
-            nom_matiere = nom_et_notes[0]
-            liste = []
-            # Extraire les notes de la matière en fonction du séparateur '|'
-            notes_sans_crochets = nom_et_notes[1].split(']')[0]
-            notes = notes_sans_crochets.split('|')
-            
-            # Convertir les notes en nombres flottants
-            notes = [float(note) for note in notes]
-            
-            notes_matiere[nom_matiere] = notes
-        
-    return notes_matiere
+def calculer_moyennes(chaine_notes):
+    """
+    Fonction pour calculer les moyennes des notes pour chaque matière.
+
+    Paramètre:
+      chaine_notes: La chaîne de caractères contenant les notes.
+
+    Returns:
+      Un dictionnaire contenant les moyennes pour chaque matière.
+    """
+
+    matieres_notes = chaine_notes.split('#')
+    resultats = {}
+    for matiere_note in matieres_notes:
+        nom_matiere, notes = matiere_note.split('[')
+        notes_devoirs, note_examen = notes.split(':')
+        note_examen = note_examen.split(']')[0]
+
+        # Nettoyage des notes de devoirs
+        notes_devoirs = notes_devoirs.replace(" ", "")
+        notes_devoirs = notes_devoirs.replace(',', '|').strip('|')
+        notes_devoirs = [float(note) for note in notes_devoirs.split('|') if note.isdigit()]
+
+        # Calcul de la moyenne des devoirs
+        moyenne_devoirs = sum(notes_devoirs) / len(notes_devoirs)
+
+        # Conversion de la note d'examen en float
+        note_examen = float(note_examen)
+
+        # Calcul de la moyenne selon la formule fournie
+        moyenne = (moyenne_devoirs + 2 * note_examen) / 3
+
+        try:
+            resultats[nom_matiere] = {
+                'notes_devoirs': notes_devoirs,
+                'note_examen': note_examen,
+                'moyenne': moyenne
+            }
+        except:
+            continue
+
+    return resultats
 
 def calculer_moyennes(chaine_notes):
     matieres_notes = chaine_notes.split('#')
@@ -181,12 +197,6 @@ def valide_classe(classe):
     else:
         return True
 
-def format_classe(classe):
-    classe.replace(" ", "")
-    debut = ['6', '5', '4', '3']
-    fin = ['A', 'B', 'C', 'D']
-    if classe[0] in debut and classe[-1].upper() in fin:
-        return f"{classe[0]}em{classe[-1].upper()}"
 
 # Ouvrir le fichier en mode lecture et le lire
 with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv', 'r') as f:

@@ -1,47 +1,49 @@
 import csv
+import re
 
-def valide_note(chaine):
-    matieres = chaine.split('#')
-    for matiere in matieres:
-        elements_matiere = matiere.split('[')
-        if len(elements_matiere) != 2:
-            return False
-        nom_matiere, notes_str = elements_matiere
-        if not nom_matiere.isalpha():
-            return False
-        notes = notes_str.split(']')
-        if len(notes) != 2:
-            return False
-        for note in notes:
-            try:
-                float(note)
-            except ValueError:
-                return False
-    return True        
+
 
 def calculer_moyennes(chaine_notes):
-    matieres_notes = chaine_notes.split('#')
-    resultats = {}
-    liste = []
+  """
+  Fonction pour calculer les moyennes des notes pour chaque matière.
 
-    for matiere_note in matieres_notes:
-        nom_matiere, notes = matiere_note.split('[')
-        notes_devoirs, note_examen = notes.strip(']').split(':')
-        notes_devoirs = [float(note.replace(',', '.')) for note in notes_devoirs.split('|')]
-        
-        moyenne_devoirs = sum(notes_devoirs) / len(notes_devoirs)
+  Args:
+    chaine_notes: La chaîne de caractères contenant les notes au format spécifié.
 
-        note_examen = float(note_examen.replace(',', '.').strip("]").replace(" ",""))
-        
-        moyenne = float((moyenne_devoirs + (2 * note_examen) ))/ 3
-        
-        resultats[nom_matiere] = {
-            'notes_devoirs': notes_devoirs,
-            'note_examen': note_examen,
-            'moyenne': moyenne
-        }
-    
-    return resultats
+  Returns:
+    Un dictionnaire contenant les moyennes pour chaque matière, ou une exception si le format est invalide.
+
+  Raises:
+    ValueError: If an error occurs during parsing due to invalid format.
+  """
+
+  matieres_notes = chaine_notes.split('#')
+  resultats = {}
+  for matiere_note in matieres_notes:
+    try:
+      nom_matiere, notes = matiere_note.split('[')
+      notes_devoirs, note_examen = notes.strip(']').split(':')
+
+      # Nettoyage des notes de devoirs
+      notes_devoirs = notes_devoirs.replace(" ", "")
+      notes_devoirs = notes_devoirs.replace(',', '|').strip('|')
+
+      # Extraction et conversion des notes en nombres flottants en gérant les caractères indésirables
+      notes_devoirs = [float(note[:-1]) if note[-1] == ']' else float(note) for note in notes_devoirs.split('|')]
+
+      # Calcul de la moyenne des devoirs et conversion de la note d'examen
+      moyenne_devoirs = round(sum(notes_devoirs) / len(notes_devoirs), 2)
+      note_examen = float(note_examen)
+
+      # Calcul de la moyenne selon la formule fournie
+      moyenne = round((moyenne_devoirs + 2 * note_examen) / (3), 2)
+      resultats[nom_matiere] = {moyenne
+      }
+    except ValueError:
+        continue
+
+  return resultats
+
 
 valide = []
 invalide = []
@@ -52,7 +54,9 @@ with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_D
 
     # Lecture par ligne et vérification de la validité des données
     for ligne in lecteur:
-        if valide_note(ligne['Note']):
+        if calculer_moyennes(ligne['Note']):
+            notes = calculer_moyennes(ligne['Note'])
+            ligne['Note'] = notes
             valide.append(ligne)
         else:
             invalide.append(ligne)
@@ -62,6 +66,7 @@ for char in valide:
     print(char['Note'])
 
 print("\n"*3)
+
 
 print("Invalide: ", end="\n"*3)
 for char in invalide:
