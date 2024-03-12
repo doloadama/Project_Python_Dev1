@@ -116,10 +116,49 @@ def firstname(prenom):
     debut = prenom[0]
     return debut.isalpha() and compte_lettres(prenom) >= 3
 
-def gestion_notes(notes):
+def extraire_notes(chaine):
+    # Diviser la chaîne en fonction du séparateur '#'
+    matieres = chaine.split('#')
     
+    notes_matiere = {}
+    
+    for matiere in matieres:
+        # Diviser chaque matière en fonction du séparateur '['
+        nom_et_notes = matiere.split('[')
+        if len(nom_et_notes) > 1:
+            nom_matiere = nom_et_notes[0]
+            
+            # Extraire les notes de la matière en fonction du séparateur '|'
+            notes_sans_crochets = nom_et_notes[1].split(']')[0]
+            notes = notes_sans_crochets.split('|')
+            
+            # Convertir les notes en nombres flottants
+            notes = [float(note) for note in notes]
+            
+            notes_matiere[nom_matiere] = notes
+        
+    return notes_matiere
 
+def calculer_moyennes(chaine_notes):
+    matieres_notes = chaine_notes.split('#')
+    resultats = {}
 
+    for matiere_note in matieres_notes:
+        nom_matiere, notes = matiere_note.split('[')
+        notes_devoirs, note_examen = notes.strip(']').split(':')
+        notes_devoirs = [float(note.replace(',', '.')) for note in notes_devoirs.split('|')]
+        
+        moyenne_devoirs = sum(notes_devoirs) / len(notes_devoirs)
+        note_examen = float(note_examen.replace(',', '.'))
+        
+        moyenne = (moyenne_devoirs + 2 * note_examen) / 3
+        resultats[nom_matiere] = {
+            'notes_devoirs': notes_devoirs,
+            'note_examen': note_examen,
+            'moyenne': moyenne
+        }
+    
+    return resultats
 
 # Ouvrir le fichier en mode lecture et le lire
 # Création de deux listes qui contiendront les lignes valides et invalides
@@ -138,7 +177,6 @@ with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_D
     lecteur = csv.DictReader(f, dialect='unix')
 
     # Lecture par ligne et vérification de la validité des données
-    # Lecture par ligne et vérification de la validité des données
     for ligne in lecteur:
         if number(ligne['Numero']) and name(ligne['Nom']) and firstname(ligne['Prénom']) and est_date_valide(ligne["Date de naissance"]):
             # Formater la date correctement
@@ -156,10 +194,10 @@ with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_D
 
 print("Les données valides: ")
 for a in valide:
-  print(a)
+  print(a, end="\n"*3)
 
-print()
+print("\n"*3)
 
 print("Les données invalides: ")
 for a in invalide:
-  print(a)
+  print(a, end="\n"*3)

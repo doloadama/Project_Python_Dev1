@@ -106,17 +106,4 @@ def traiter_donnees(filename='/home/adama/Documents/Project_Python_Dev1/Donnees_
         
         return donnees_valides, donnees_invalides
 
-filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'
 
-
-"""else:"""
-
-
-valide = []
-invalide = []
-
-valide, invalide = traiter_donnees(filename)
-
-print(valide)
-print("\n"*3)
-print(invalide)
