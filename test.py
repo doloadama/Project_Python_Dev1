@@ -1,5 +1,6 @@
 import csv
 import datetime
+import re
 
 def changer_format_date(date_str):
     """
@@ -25,10 +26,8 @@ def changer_format_date(date_str):
         return date_str
 
 def valide_note(note):
-    if note:
-        return True
-    else:
-        return False
+    bonne_note = re.match("[\d|\d:\d]", note)
+    return bonne_note
 
 def est_date_valide(date_str):
     """
@@ -172,18 +171,22 @@ valide = []
 invalide = []
 
 def valide_classe(classe):
-    classe.strip()
+    classe.replace(" ", "")
     debut = ['6', '5', '4', '3']
     fin = ['A', 'B', 'C', 'D']
-    if not classe[0] in debut or not 
+    if not classe:
+        return False
+    elif not classe[0] in debut or classe[-1] not in fin:
+        return False
+    else:
+        return True
 
 def format_classe(classe):
-    classe.strip()
+    classe.replace(" ", "")
     debut = ['6', '5', '4', '3']
     fin = ['A', 'B', 'C', 'D']
-    if classe[0] in debut and classe[-1] in fin:
-        return f"{classe[0]}em{classe[-1]}"
-        
+    if classe[0] in debut and classe[-1].upper() in fin:
+        return f"{classe[0]}em{classe[-1].upper()}"
 
 # Ouvrir le fichier en mode lecture et le lire
 with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv', 'r') as f:
@@ -192,7 +195,7 @@ with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_D
 
     # Lecture par ligne et vérification de la validité des données
     for ligne in lecteur:
-        if number(ligne['Numero']) and name(ligne['Nom']) and firstname(ligne['Prénom']) and est_date_valide(ligne["Date de naissance"]) and valide_note(ligne['Note']):
+        if number(ligne['Numero']) and name(ligne['Nom']) and firstname(ligne['Prénom']) and est_date_valide(ligne["Date de naissance"]) :
             # Formater la date correctement
             formatted_date = format_date(ligne["Date de naissance"])
             if formatted_date:

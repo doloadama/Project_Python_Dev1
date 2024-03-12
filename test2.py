@@ -1,13 +1,23 @@
 import csv
 
-def valide_note(note):
-    for i in note:
-        if i.isalpha():
+def valide_note(chaine):
+    matieres = chaine.split('#')
+    for matiere in matieres:
+        elements_matiere = matiere.split('[')
+        if len(elements_matiere) != 2:
             return False
-        else:
-            continue
-    return True
-
+        nom_matiere, notes_str = elements_matiere
+        if not nom_matiere.isalpha():
+            return False
+        notes = notes_str.split(']')
+        if len(notes) != 2:
+            return False
+        for note in notes:
+            try:
+                float(note)
+            except ValueError:
+                return False
+    return True        
 
 def calculer_moyennes(chaine_notes):
     matieres_notes = chaine_notes.split('#')
@@ -33,6 +43,8 @@ def calculer_moyennes(chaine_notes):
     
     return resultats
 
+valide = []
+invalide = []
 # Ouvrir le fichier en mode lecture et le lire
 with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv', 'r') as f:
     # Créer un lecteur CSV qui permet de lire ligne par ligne le fichier
@@ -41,5 +53,16 @@ with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_D
     # Lecture par ligne et vérification de la validité des données
     for ligne in lecteur:
         if valide_note(ligne['Note']):
-            date = calculer_moyennes(ligne['Note'])
-            print(date)
+            valide.append(ligne)
+        else:
+            invalide.append(ligne)
+
+print("Valide: ", end="\n"*3)
+for char in valide:
+    print(char['Note'])
+
+print("\n"*3)
+
+print("Invalide: ", end="\n"*3)
+for char in invalide:
+    print(char['Note'])
