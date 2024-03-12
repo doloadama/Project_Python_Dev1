@@ -24,6 +24,12 @@ def changer_format_date(date_str):
         # Si une erreur se produit lors de la conversion, retourner None
         return date_str
 
+def valide_note(note):
+    if note:
+        return True
+    else:
+        return False
+
 def est_date_valide(date_str):
     """
     Fonction pour vérifier si une date est valide.
@@ -127,7 +133,7 @@ def extraire_notes(chaine):
         nom_et_notes = matiere.split('[')
         if len(nom_et_notes) > 1:
             nom_matiere = nom_et_notes[0]
-            
+            liste = []
             # Extraire les notes de la matière en fonction du séparateur '|'
             notes_sans_crochets = nom_et_notes[1].split(']')[0]
             notes = notes_sans_crochets.split('|')
@@ -165,11 +171,19 @@ def calculer_moyennes(chaine_notes):
 valide = []
 invalide = []
 
+def valide_classe(classe):
+    classe.strip()
+    debut = ['6', '5', '4', '3']
+    fin = ['A', 'B', 'C', 'D']
+    if not classe[0] in debut or not 
+
 def format_classe(classe):
     classe.strip()
-    if classe[0].isdigit() and classe:
-        classe.replace("i", "")
-        nouvelle_classe = classe[0:2] + "e" + classe[4:]
+    debut = ['6', '5', '4', '3']
+    fin = ['A', 'B', 'C', 'D']
+    if classe[0] in debut and classe[-1] in fin:
+        return f"{classe[0]}em{classe[-1]}"
+        
 
 # Ouvrir le fichier en mode lecture et le lire
 with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv', 'r') as f:
@@ -178,7 +192,7 @@ with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_D
 
     # Lecture par ligne et vérification de la validité des données
     for ligne in lecteur:
-        if number(ligne['Numero']) and name(ligne['Nom']) and firstname(ligne['Prénom']) and est_date_valide(ligne["Date de naissance"]):
+        if number(ligne['Numero']) and name(ligne['Nom']) and firstname(ligne['Prénom']) and est_date_valide(ligne["Date de naissance"]) and valide_note(ligne['Note']):
             # Formater la date correctement
             formatted_date = format_date(ligne["Date de naissance"])
             if formatted_date:
