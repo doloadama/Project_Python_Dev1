@@ -2,6 +2,10 @@ import csv, datetime
 from tabulate import tabulate
 from gestion_validations import*
 
+#Les deux listes qui se chargeront de stocker les informations à afficher
+invalide = []
+valide = []
+
 def traiter_donnees(filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'):
         valide = []
         invalide = []
@@ -89,7 +93,8 @@ def afficher_cinq_premieres_informations(informations):
     pass
 
 def ajouter_information():
-    pass
+    choix = ['CODE','Numero','Nom','Prénom','Date de naissance','Classe','Note']
+    choisir = input("Saisissez la ligne")
 
 def modifier_information_invalide(information):
     pass
@@ -110,13 +115,21 @@ while True:
     choix = input("Choisissez une option : ")
     
     if choix == "1":
-        afficher_informations()
+        filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'
+        valide, invalide = traiter_donnees(filename)
+        traiter_donnees(filename)
+        print("Données valides :",end="\n"*2 )
+        print(tabulate(valide, headers= "keys",tablefmt="pipe"), end="\n")
+        print("Données invalides :",end="\n"*2 )
+        print(tabulate(invalide, headers= "keys",tablefmt="pipe"), end="\n")
+
     elif choix == "2":
         print()
         numero = input("Entrez le numéro de l'information : ")
         valide = afficher_information_par_numero(numero)
         for ligne in valide:
-            print(tabulate(valide, headers= "keys",tablefmt="pipe"), end="\n")
+            print(tabulate(valide, headers= "keys",tablefmt="simple"), end="\n")
+            print()
     elif choix == "3":
         afficher_cinq_premieres_informations()
     elif choix == "4":
@@ -129,3 +142,4 @@ while True:
         break
     else:
         print("Option invalide. Veuillez choisir une option valide.")
+    print("\n"*2)
