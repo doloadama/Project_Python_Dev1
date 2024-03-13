@@ -87,6 +87,8 @@ def afficher_information_par_numero(numero):
                         ligne["Date de naissance"] = formatted_date  # Mettre à jour la date dans la ligne
                         if numero == ligne['Numero']:
                             valide.append(ligne)
+                    else:
+                        return "Numero inexistant"
         return valide
 
 def afficher_cinq_premieres_informations(informations):
@@ -119,17 +121,20 @@ while True:
         valide, invalide = traiter_donnees(filename)
         traiter_donnees(filename)
         print("Données valides :",end="\n"*2 )
-        print(tabulate(valide, headers= "keys",tablefmt="pipe"), end="\n")
+        print(tabulate(valide, headers= "keys",tablefmt="plain", maxcolwidths=[None, 8]), end="\n")
         print("Données invalides :",end="\n"*2 )
-        print(tabulate(invalide, headers= "keys",tablefmt="pipe"), end="\n")
+        print(tabulate(invalide, headers= "keys",tablefmt="plain", maxcolwidths=[None, 8]), end="\n")
 
     elif choix == "2":
         print()
         numero = input("Entrez le numéro de l'information : ")
         valide = afficher_information_par_numero(numero)
         for ligne in valide:
-            print(tabulate(valide, headers= "keys",tablefmt="simple"), end="\n")
-            print()
+            if valide:
+                print(tabulate(valide, headers= "keys",tablefmt="simple"), end="\n")
+                print()
+            else:
+                print("Numero inexistant!")
     elif choix == "3":
         afficher_cinq_premieres_informations()
     elif choix == "4":
