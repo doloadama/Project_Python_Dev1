@@ -1,6 +1,5 @@
 import datetime
 
-
 def changer_format_date(date_str):
     """
     Fonction pour changer le format d'une date.
@@ -131,44 +130,55 @@ def firstname(prenom):
 
 def calculer_moyennes(chaine_notes):
     """
-  Fonction pour calculer les moyennes des notes pour chaque matière.
+    Fonction pour calculer la moyenne générale des notes à partir d'une chaîne de caractères.
 
-  Args:
-    chaine_notes: La chaîne de caractères contenant les notes au format spécifié.
+    Args:
+        chaine_notes: La chaîne de caractères contenant les notes au format spécifié.
 
-  Returns:
-    Un dictionnaire contenant les moyennes pour chaque matière, ou une exception si le format est invalide.
+    Returns:
+        La moyenne générale calculée à partir des notes valides, ou une exception si aucune note valide n'a été trouvée.
 
-  Raises:
-    ValueError: If an error occurs during parsing due to invalid format.
-  """
-
+    Raises:
+        ValueError: Si une erreur se produit lors de l'analyse en raison d'un format invalide.
+    """
     matieres_notes = chaine_notes.split('#')
-    results = {}
+    total_notes = 0
+    nombre_matieres = 0
+
     for matiere_note in matieres_notes:
         try:
             nom_matiere, notes = matiere_note.split('[')
-            notes_devoirs, note_exam = notes.strip(']').split(':')
+            notes_devoirs, note_examen = notes.strip(']').split(':')
 
             # Nettoyage des notes de devoirs
             notes_devoirs = notes_devoirs.replace(" ", "")
             notes_devoirs = notes_devoirs.replace(',', '|').strip('|')
 
-            # Extraction et conversion des notes en nombres flottants en gérant les caractères indésirables
-            notes_devoirs = [float(note[:-1]) if note[-1] == ']' else float(note) for note in notes_devoirs.split('|')]
+            # Extraction et conversion des notes en nombres flottants
+            notes_devoirs = [float(note) for note in notes_devoirs.split('|') if note.isdigit()]
 
-            # Calcul de la moyenne des devoirs et conversion de la note d'examen
-            moyenne_devoirs = round(sum(notes_devoirs) / len(notes_devoirs), 2)
-            note_exam = float(note_exam)
+            # Vérifier si des notes de devoirs valides ont été trouvées
+            if notes_devoirs:
+                # Calcul de la moyenne des devoirs
+                moyenne_devoirs = sum(notes_devoirs) / len(notes_devoirs)
 
-            # Calcul de la moyenne selon la formule fournie
-            moyenne = round((moyenne_devoirs + 2 * note_exam) / 3, 2)
-            results[nom_matiere] = {moyenne
-                                      }
-        except ValueError:
+                # Conversion de la note d'examen en flottant
+                note_examen = float(note_examen)
+
+                # Calcul de la moyenne selon la formule fournie
+                moyenne_matiere = (moyenne_devoirs + 2 * note_examen) / 3
+                total_notes += moyenne_matiere
+                nombre_matieres += 1
+        except (ValueError, IndexError):
             continue
 
-    return results
+    # Calcul de la moyenne générale
+    if nombre_matieres > 0:
+        moyenne_generale = round((total_notes / nombre_matieres),2)
+    else:
+        raise ValueError("Aucune note valide trouvée dans la chaîne d'entrée.")
+
+    return moyenne_generale
 
 def valide_classe(classe):
     classe.replace(" ", "")
@@ -181,9 +191,14 @@ def valide_classe(classe):
     else:
         return True
 
+def format_classe(classe):
+    classe = classe.replace(" ", "")
+    classe = classe[0]+"eme"+classe[-1]
+    return classe
 
 def traiter_donnees():
     donnees_valides = []
     donnees_invalides = []
 
     return donnees_valides, donnees_invalides
+

@@ -1,11 +1,12 @@
 from tabulate import tabulate
+import csv
 from gestion_validations import *
 
 #Les deux listes qui se chargeront de stocker les informations à afficher
 invalide = []
 valide = []
-
-def traiter_donnees(filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'):
+filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'
+def traiter_donnees(filename):
         valide = []
         invalide = []
         # Ouvrir le fichier en mode lecture et le lire
@@ -20,6 +21,8 @@ def traiter_donnees(filename='/home/adama/Documents/Project_Python_Dev1/Donnees_
                     notes = calculer_moyennes(ligne['Note'])
                     ligne['Note'] = notes
                     formatted_date = format_date(ligne["Date de naissance"])
+                    formatted_classe = format_classe((ligne['Classe']))
+                    ligne['Classe'] = formatted_classe
                     if formatted_date:
                         # Si la date est formatée avec succès, l'ajouter à la liste des valides
                         ligne["Date de naissance"] = formatted_date  # Mettre à jour la date dans la ligne
@@ -30,7 +33,7 @@ def traiter_donnees(filename='/home/adama/Documents/Project_Python_Dev1/Donnees_
                 else:
                     # Si la date n'est pas valide, ajouter la ligne à la liste des invalides
                     invalide.append(ligne)
-                    
+
             return valide, invalide
 
 def afficher_informations():
@@ -49,9 +52,11 @@ def afficher_informations():
                     notes = calculer_moyennes(ligne['Note'])
                     ligne['Note'] = notes
                     formatted_date = format_date(ligne["Date de naissance"])
+                    formatted_classe = format_classe((ligne['Classe']))
                     if formatted_date:
                         # Si la date est formatée avec succès, l'ajouter à la liste des valides
                         ligne["Date de naissance"] = formatted_date  # Mettre à jour la date dans la ligne
+                        ligne['Classe'] = formatted_classe
                         valide.append(ligne)
                     else:
                         # Si la date ne peut pas être formatée, ajouter la ligne à la liste des invalides
@@ -59,7 +64,7 @@ def afficher_informations():
                 else:
                     # Si la date n'est pas valide, ajouter la ligne à la liste des invalides
                     invalide.append(ligne)
-                    
+
             return valide, invalide
     filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'
     invalide = []
@@ -90,9 +95,16 @@ def afficher_information_par_numero(numero):
                         return "Numero inexistant"
         return valide
 
-def afficher_cinq_premieres_informations(informations):
-    pass
+def afficher_cinq_premiers(filename):
+  valide, invalide = traiter_donnees(filename)
 
+  # Check if all elements in valide are dictionaries (modify if needed)
+  if not all(isinstance(item, dict) for item in valide):
+      raise ValueError("Invalid data format in valide list")
+
+  # Assuming "Note" is the key for sorting grades (modify if different)
+  trie = sorted(valide, key=lambda item: item["Note"], reverse=True)
+  return trie[:5]
 def ajouter_information():
     choix = ['CODE','Numero','Nom','Prénom','Date de naissance','Classe','Note']
     choisir = input("Saisissez la ligne")
@@ -108,21 +120,22 @@ while True:
     print("Menu interactif :")
     print("1. Afficher les informations")
     print("2. Afficher une information par son numéro")
-    print("3. Afficher les cinq premières informations")
+    print("3. Afficher les cinq premiers")
     print("4. Ajouter une information")
     print("5. Modifier une information invalide")
     print("6. Quitter")
-    
+
     choix = input("Choisissez une option : ")
-    
+
     if choix == "1":
         filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'
         valide, invalide = traiter_donnees(filename)
         traiter_donnees(filename)
         print("Données valides :",end="\n"*2 )
-        print(tabulate(valide, headers= "keys",tablefmt="plain", maxcolwidths=[None, 8]), end="\n")
+        print(tabulate(valide, headers= "keys",tablefmt="simple_grid", maxcolwidths=[None, 8]), end="\n")
+        print("\n"*3)
         print("Données invalides :",end="\n"*2 )
-        print(tabulate(invalide, headers= "keys",tablefmt="plain", maxcolwidths=[None, 8]), end="\n")
+        print(tabulate(invalide, headers= "keys",tablefmt="simple_grid", maxcolwidths=[None, 8]), end="\n")
 
     elif choix == "2":
         print()
@@ -135,7 +148,8 @@ while True:
             else:
                 print("Numero inexistant!")
     elif choix == "3":
-        afficher_cinq_premieres_informations()
+        trie = afficher_cinq_premiers(filename)
+        print(tabulate(trie, headers='keys', tablefmt="simple_grid", maxcolwidths=[None, 8]), end="\n")
     elif choix == "4":
         ajouter_information()
     elif choix == "5":
