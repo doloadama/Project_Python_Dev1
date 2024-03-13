@@ -23,7 +23,6 @@ def changer_format_date(date_str):
         # Si une erreur se produit lors de la conversion, retourner None
         return date_str
 
-
 def est_date_valide(date_str):
     """
     Fonction pour vérifier si une date est valide.
@@ -60,7 +59,6 @@ def est_date_valide(date_str):
     # Si aucun format ne fonctionne, la date n'est pas valide
     return False
 
-
 def format_date(date_str):
     date_formats = [
         '%d/%m/%y', '%d-%m-%y', '%m/%d/%y', '%m|%d|%y', '%m/%d/%Y', '%m-%d-%Y',
@@ -84,7 +82,6 @@ def format_date(date_str):
     # Si aucun format ne correspond, retourner None ou une valeur par défaut
     return None  # ou raise ValueError("Format de date invalide")
 
-
 def number(num):
     """
     Fonction qui permet de verifier la validité
@@ -102,7 +99,6 @@ def number(num):
     """
     return num.isalnum() and len(num) == 7 and num.isupper()
 
-
 def compte_lettres(mot):
     """
     Function that takes a parameter and return the number of letters in that parameter
@@ -117,16 +113,13 @@ def compte_lettres(mot):
             continue
     return compte
 
-
 def name(nom):
     debut = nom[0]
     return debut.isalpha() and compte_lettres(nom) >= 2
 
-
 def firstname(prenom):
     debut = prenom[0]
     return debut.isalpha() and compte_lettres(prenom) >= 3
-
 
 def calculer_moyennes(chaine_notes):
     """
@@ -192,8 +185,7 @@ def calculer_moyennes(chaine_notes):
 
     resultats['moyenne_generale'] = moyenne_generale
 
-    return resultats
-
+    return moyenne_generale
 
 def valide_classe(classe):
     classe.replace(" ", "")
@@ -210,10 +202,4 @@ def format_classe(classe):
     classe = classe.replace(" ", "")
     classe = classe[0]+"eme"+classe[-1]
     return classe
-
-def traiter_donnees():
-    donnees_valides = []
-    donnees_invalides = []
-
-    return donnees_valides, donnees_invalides
 
