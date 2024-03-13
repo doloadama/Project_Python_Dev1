@@ -1,6 +1,5 @@
 import datetime
-import re
-import csv
+
 
 def changer_format_date(date_str):
     """
@@ -15,15 +14,16 @@ def changer_format_date(date_str):
     try:
         # Convertir la date en objet datetime avec l'ancien format "%d/%m/%Y"
         date_obj = datetime.datetime.strptime(date_str, "%d/%m/%Y")
-        
+
         # Changer le format de la date au format "%Y-%m-%d"
         formatted_date = date_obj.strftime("%Y-%m-%d")
-        
+
         return formatted_date
-    
+
     except ValueError:
         # Si une erreur se produit lors de la conversion, retourner None
         return date_str
+
 
 def est_date_valide(date_str):
     """
@@ -35,12 +35,18 @@ def est_date_valide(date_str):
     Returns:
         True si la date est valide, False sinon.
     """
-    date_formats = ["%d/%m/%y", "%d/%m/%Y", "%d %m %Y", "%d %B %Y", "%d,%m,%Y", "%d:%m:%Y", "%d-%m-%Y", "%d|%m|%Y", "%d.%m.%Y",
-                    "%d/%B/%Y", "%d.%B.%Y", "%d-%B-%Y", "%d:%B:%Y", "%d_%m_%Y", "%d-%m-%y", "%d %m %y", "%d %B %y", "%d,%m,%y",
-                    "%d:%m:%y", "%d|%m|%y", "%d|%B|%y", "%d.%m.%y", "%d.%B.%y", "%d-%B-%y", "%d:%B:%y", "%d_%m_%y", "%m/%d/%y",
-                    "%m/%d/%Y", "%m-%d-%Y", "%m-%d-%y", "%Y-%m-%d", "%d-%m-%y", "%d %m %Y", "%d %B %Y", "%d,%m,%Y", "%d:%m:%Y",
-                    "%d/%m/%y", "%d-%m-%y", "%d %m %y", "%d %B %y", "%d,%m,%y", "%d:%m:%y", "%d|%m|%y", "%d|%B|%y", "%d.%m.%y",
-                    "%d.%B.%y", "%d-%B-%y", "%d:%B:%y", "%d,%B,%y", "%d/%B/%y", "%d.%B.%y", "%d|%B|%Y", "%d-%B-%Y", "%d:%B:%Y",
+    date_formats = ["%d/%m/%y", "%d/%m/%Y", "%d %m %Y", "%d %B %Y", "%d,%m,%Y", "%d:%m:%Y", "%d-%m-%Y", "%d|%m|%Y",
+                    "%d.%m.%Y",
+                    "%d/%B/%Y", "%d.%B.%Y", "%d-%B-%Y", "%d:%B:%Y", "%d_%m_%Y", "%d-%m-%y", "%d %m %y", "%d %B %y",
+                    "%d,%m,%y",
+                    "%d:%m:%y", "%d|%m|%y", "%d|%B|%y", "%d.%m.%y", "%d.%B.%y", "%d-%B-%y", "%d:%B:%y", "%d_%m_%y",
+                    "%m/%d/%y",
+                    "%m/%d/%Y", "%m-%d-%Y", "%m-%d-%y", "%Y-%m-%d", "%d-%m-%y", "%d %m %Y", "%d %B %Y", "%d,%m,%Y",
+                    "%d:%m:%Y",
+                    "%d/%m/%y", "%d-%m-%y", "%d %m %y", "%d %B %y", "%d,%m,%y", "%d:%m:%y", "%d|%m|%y", "%d|%B|%y",
+                    "%d.%m.%y",
+                    "%d.%B.%y", "%d-%B-%y", "%d:%B:%y", "%d,%B,%y", "%d/%B/%y", "%d.%B.%y", "%d|%B|%Y", "%d-%B-%Y",
+                    "%d:%B:%Y",
                     "%d_%m_%y", "%d_%m_%Y", "%d-%B-%Y", "%d-%m-%Y"
                     ]
 
@@ -55,6 +61,7 @@ def est_date_valide(date_str):
     # Si aucun format ne fonctionne, la date n'est pas valide
     return False
 
+
 def format_date(date_str):
     date_formats = [
         '%d/%m/%y', '%d-%m-%y', '%m/%d/%y', '%m|%d|%y', '%m/%d/%Y', '%m-%d-%Y',
@@ -63,7 +70,7 @@ def format_date(date_str):
         '%d/%B/%Y', '%d.%B.%Y', '%d|%B|%Y', '%d-%B-%Y', '%d:%B:%Y', '%d_%m_%Y',
         '%d_%m_%y'
     ]
-    
+
     for fmt in date_formats:
         try:
             # Essayer de convertir la date avec le format actuel
@@ -74,9 +81,10 @@ def format_date(date_str):
         except ValueError:
             # Si la conversion échoue, essayer avec le prochain format
             continue
-    
+
     # Si aucun format ne correspond, retourner None ou une valeur par défaut
     return None  # ou raise ValueError("Format de date invalide")
+
 
 def number(num):
     """
@@ -95,6 +103,7 @@ def number(num):
     """
     return num.isalnum() and len(num) == 7 and num.isupper()
 
+
 def compte_lettres(mot):
     """
     Function that takes a parameter and return the number of letters in that parameter
@@ -109,16 +118,19 @@ def compte_lettres(mot):
             continue
     return compte
 
+
 def name(nom):
     debut = nom[0]
     return debut.isalpha() and compte_lettres(nom) >= 2
+
 
 def firstname(prenom):
     debut = prenom[0]
     return debut.isalpha() and compte_lettres(prenom) >= 3
 
+
 def calculer_moyennes(chaine_notes):
-  """
+    """
   Fonction pour calculer les moyennes des notes pour chaque matière.
 
   Args:
@@ -131,37 +143,32 @@ def calculer_moyennes(chaine_notes):
     ValueError: If an error occurs during parsing due to invalid format.
   """
 
-  matieres_notes = chaine_notes.split('#')
-  resultats = {}
-  for matiere_note in matieres_notes:
-    try:
-      nom_matiere, notes = matiere_note.split('[')
-      notes_devoirs, note_examen = notes.strip(']').split(':')
+    matieres_notes = chaine_notes.split('#')
+    results = {}
+    for matiere_note in matieres_notes:
+        try:
+            nom_matiere, notes = matiere_note.split('[')
+            notes_devoirs, note_exam = notes.strip(']').split(':')
 
-      # Nettoyage des notes de devoirs
-      notes_devoirs = notes_devoirs.replace(" ", "")
-      notes_devoirs = notes_devoirs.replace(',', '|').strip('|')
+            # Nettoyage des notes de devoirs
+            notes_devoirs = notes_devoirs.replace(" ", "")
+            notes_devoirs = notes_devoirs.replace(',', '|').strip('|')
 
-      # Extraction et conversion des notes en nombres flottants en gérant les caractères indésirables
-      notes_devoirs = [float(note[:-1]) if note[-1] == ']' else float(note) for note in notes_devoirs.split('|')]
+            # Extraction et conversion des notes en nombres flottants en gérant les caractères indésirables
+            notes_devoirs = [float(note[:-1]) if note[-1] == ']' else float(note) for note in notes_devoirs.split('|')]
 
-      # Calcul de la moyenne des devoirs et conversion de la note d'examen
-      moyenne_devoirs = round(sum(notes_devoirs) / len(notes_devoirs), 2)
-      note_examen = float(note_examen)
+            # Calcul de la moyenne des devoirs et conversion de la note d'examen
+            moyenne_devoirs = round(sum(notes_devoirs) / len(notes_devoirs), 2)
+            note_exam = float(note_exam)
 
-      # Calcul de la moyenne selon la formule fournie
-      moyenne = round((moyenne_devoirs + 2 * note_examen) / (3), 2)
-      resultats[nom_matiere] = {moyenne
-      }
-    except ValueError:
-        continue
+            # Calcul de la moyenne selon la formule fournie
+            moyenne = round((moyenne_devoirs + 2 * note_exam) / 3, 2)
+            results[nom_matiere] = {moyenne
+                                      }
+        except ValueError:
+            continue
 
-  return resultats
-
-# Ouvrir le fichier en mode lecture et le lire
-# Création de deux listes qui contiendront les lignes valides et invalides
-valide = []
-invalide = []
+    return results
 
 def valide_classe(classe):
     classe.replace(" ", "")
@@ -174,11 +181,9 @@ def valide_classe(classe):
     else:
         return True
 
-def traiter_donnees(filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'):
+
+def traiter_donnees():
     donnees_valides = []
     donnees_invalides = []
-    
-        
+
     return donnees_valides, donnees_invalides
-
-

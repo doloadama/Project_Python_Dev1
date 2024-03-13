@@ -1,6 +1,5 @@
-import csv, datetime
 from tabulate import tabulate
-from gestion_validations import*
+from gestion_validations import *
 
 #Les deux listes qui se chargeront de stocker les informations à afficher
 invalide = []
