@@ -2,39 +2,43 @@ from tabulate import tabulate
 import csv
 from gestion_validations import *
 
-#Les deux listes qui se chargeront de stocker les informations à afficher
+# Les deux listes qui se chargeront de stocker les informations à afficher
 invalide = []
 valide = []
-filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'
+filename = '/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'
+
+
 def traiter_donnees(filename):
-        valide = []
-        invalide = []
-        # Ouvrir le fichier en mode lecture et le lire
-        with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv', 'r') as f:
-            # Créer un lecteur CSV qui permet de lire ligne par ligne le fichier
-            lecteur = csv.DictReader(f, dialect='unix')
+    valide = []
+    invalide = []
+    # Ouvrir le fichier en mode lecture et le lire
+    with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv', 'r') as f:
+        # Créer un lecteur CSV qui permet de lire ligne par ligne le fichier
+        lecteur = csv.DictReader(f, dialect='unix')
 
-            # Lecture par ligne et vérification de la validité des données
-            for ligne in lecteur:
-                if number(ligne['Numero']) and name(ligne['Nom']) and firstname(ligne['Prénom']) and est_date_valide(ligne["Date de naissance"]) and valide_classe(ligne['Classe']) and calculer_moyennes(ligne['Note']):
-                    # Formater la date correctement
-                    notes = calculer_moyennes(ligne['Note'])
-                    ligne['Note'] = notes
-                    formatted_date = format_date(ligne["Date de naissance"])
-                    formatted_classe = format_classe((ligne['Classe']))
-                    ligne['Classe'] = formatted_classe
-                    if formatted_date:
-                        # Si la date est formatée avec succès, l'ajouter à la liste des valides
-                        ligne["Date de naissance"] = formatted_date  # Mettre à jour la date dans la ligne
-                        valide.append(ligne)
-                    else:
-                        # Si la date ne peut pas être formatée, ajouter la ligne à la liste des invalides
-                        invalide.append(ligne)
+        # Lecture par ligne et vérification de la validité des données
+        for ligne in lecteur:
+            if number(ligne['Numero']) and name(ligne['Nom']) and firstname(ligne['Prénom']) and est_date_valide(
+                    ligne["Date de naissance"]) and valide_classe(ligne['Classe']) and calculer_moyennes(ligne['Note']):
+                # Formater la date correctement
+                notes = calculer_moyennes(ligne['Note'])
+                ligne['Note'] = notes
+                formatted_date = format_date(ligne["Date de naissance"])
+                formatted_classe = format_classe((ligne['Classe']))
+                ligne['Classe'] = formatted_classe
+                if formatted_date:
+                    # Si la date est formatée avec succès, l'ajouter à la liste des valides
+                    ligne["Date de naissance"] = formatted_date  # Mettre à jour la date dans la ligne
+                    valide.append(ligne)
                 else:
-                    # Si la date n'est pas valide, ajouter la ligne à la liste des invalides
+                    # Si la date ne peut pas être formatée, ajouter la ligne à la liste des invalides
                     invalide.append(ligne)
+            else:
+                # Si la date n'est pas valide, ajouter la ligne à la liste des invalides
+                invalide.append(ligne)
 
-            return valide, invalide
+        return valide, invalide
+
 
 def afficher_informations():
     def traiter_donnees(filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'):
@@ -47,7 +51,9 @@ def afficher_informations():
 
             # Lecture par ligne et vérification de la validité des données
             for ligne in lecteur:
-                if number(ligne['Numero']) and name(ligne['Nom']) and firstname(ligne['Prénom']) and est_date_valide(ligne["Date de naissance"]) and valide_classe(ligne['Classe']) and calculer_moyennes(ligne['Note']):
+                if number(ligne['Numero']) and name(ligne['Nom']) and firstname(ligne['Prénom']) and est_date_valide(
+                        ligne["Date de naissance"]) and valide_classe(ligne['Classe']) and calculer_moyennes(
+                        ligne['Note']):
                     # Formater la date correctement
                     notes = calculer_moyennes(ligne['Note'])
                     ligne['Note'] = notes
@@ -66,54 +72,65 @@ def afficher_informations():
                     invalide.append(ligne)
 
             return valide, invalide
-    filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'
+
+    filename = '/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'
     invalide = []
     valide = []
     valide, invalide = traiter_donnees(filename)
-    print(tabulate(valide, headers= "keys",tablefmt="pipe"), end="\n")
+    print(tabulate(valide, headers="keys", tablefmt="pipe"), end="\n")
+
 
 def afficher_information_par_numero(numero):
-        valide = []
-        # Ouvrir le fichier en mode lecture et le lire
-        with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv', 'r') as f:
-            # Créer un lecteur CSV qui permet de lire ligne par ligne le fichier
-            lecteur = csv.DictReader(f, dialect='unix')
+    valide = []
+    # Ouvrir le fichier en mode lecture et le lire
+    with open('/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv', 'r') as f:
+        # Créer un lecteur CSV qui permet de lire ligne par ligne le fichier
+        lecteur = csv.DictReader(f, dialect='unix')
 
-            # Lecture par ligne et vérification de la validité des données
-            for ligne in lecteur:
-                if number(ligne['Numero']) and name(ligne['Nom']) and firstname(ligne['Prénom']) and est_date_valide(ligne["Date de naissance"]) and valide_classe(ligne['Classe']) and calculer_moyennes(ligne['Note']):
-                    # Formater la date correctement
-                    notes = calculer_moyennes(ligne['Note'])
-                    ligne['Note'] = notes
-                    formatted_date = format_date(ligne["Date de naissance"])
-                    if formatted_date:
-                        # Si la date est formatée avec succès, l'ajouter à la liste des valides
-                        ligne["Date de naissance"] = formatted_date  # Mettre à jour la date dans la ligne
-                        if numero == ligne['Numero']:
-                            valide.append(ligne)
-                    else:
-                        return "Numero inexistant"
-        return valide
+        # Lecture par ligne et vérification de la validité des données
+        for ligne in lecteur:
+            if number(ligne['Numero']) and name(ligne['Nom']) and firstname(ligne['Prénom']) and est_date_valide(
+                    ligne["Date de naissance"]) and valide_classe(ligne['Classe']) and calculer_moyennes(ligne['Note']):
+                # Formater la date correctement
+                notes = calculer_moyennes(ligne['Note'])
+                ligne['Note'] = notes
+                formatted_date = format_date(ligne["Date de naissance"])
+                if formatted_date:
+                    # Si la date est formatée avec succès, l'ajouter à la liste des valides
+                    ligne["Date de naissance"] = formatted_date  # Mettre à jour la date dans la ligne
+                    if numero == ligne['Numero']:
+                        valide.append(ligne)
+                else:
+                    return "Numero inexistant"
+    return valide
+
 
 def afficher_cinq_premiers(filename):
-  valide, invalide = traiter_donnees(filename)
+    valide, invalide = traiter_donnees(filename)
 
-  # Check if all elements in valide are dictionaries (modify if needed)
-  if not all(isinstance(item, dict) for item in valide):
-      raise ValueError("Invalid data format in valide list")
+    # Check if all elements in valide are dictionaries (modify if needed)
+    if not all(isinstance(item, dict) for item in valide):
+        raise ValueError("Invalid data format in valide list")
 
-  # Assuming "Note" is the key for sorting grades (modify if different)
-  trie = sorted(valide, key=lambda item: item["Note"], reverse=True)
-  return trie[:5]
+    # Assuming "moyenne" is the key for sorting grades (modify if different)
+    trie = sorted(valide, key=lambda d: d.get('moyenne', 0), reverse=True)
+    return trie[:5]
+
+
+
+
 def ajouter_information():
-    choix = ['CODE','Numero','Nom','Prénom','Date de naissance','Classe','Note']
+    choix = ['CODE', 'Numero', 'Nom', 'Prénom', 'Date de naissance', 'Classe', 'Note']
     choisir = input("Saisissez la ligne")
+
 
 def modifier_information_invalide(information):
     pass
 
+
 def afficher_par_pagination(informations, lignes_par_page=5):
     pass
+
 
 # Menu interactif
 while True:
@@ -128,14 +145,14 @@ while True:
     choix = input("Choisissez une option : ")
 
     if choix == "1":
-        filename='/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'
+        filename = '/home/adama/Documents/Project_Python_Dev1/Donnees_Projet_Python_Dev_Data.csv'
         valide, invalide = traiter_donnees(filename)
         traiter_donnees(filename)
-        print("Données valides :",end="\n"*2 )
-        print(tabulate(valide, headers= "keys",tablefmt="simple_grid", maxcolwidths=[None, 8]), end="\n")
-        print("\n"*3)
-        print("Données invalides :",end="\n"*2 )
-        print(tabulate(invalide, headers= "keys",tablefmt="simple_grid", maxcolwidths=[None, 8]), end="\n")
+        print("Données valides :", end="\n" * 2)
+        print(tabulate(valide, headers="keys", tablefmt="simple_grid", maxcolwidths=[None, 8]), end="\n")
+        print("\n" * 3)
+        print("Données invalides :", end="\n" * 2)
+        print(tabulate(invalide, headers="keys", tablefmt="simple_grid", maxcolwidths=[None, 8]), end="\n")
 
     elif choix == "2":
         print()
@@ -143,7 +160,7 @@ while True:
         valide = afficher_information_par_numero(numero)
         for ligne in valide:
             if valide:
-                print(tabulate(valide, headers= "keys",tablefmt="simple"), end="\n")
+                print(tabulate(valide, headers="keys", tablefmt="simple"), end="\n")
                 print()
             else:
                 print("Numero inexistant!")
@@ -160,4 +177,4 @@ while True:
         break
     else:
         print("Option invalide. Veuillez choisir une option valide.")
-    print("\n"*2)
+    print("\n" * 2)

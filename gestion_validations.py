@@ -130,22 +130,22 @@ def firstname(prenom):
 
 def calculer_moyennes(chaine_notes):
     """
-    Fonction pour calculer la moyenne générale des notes à partir d'une chaîne de caractères.
+    Fonction pour calculer les moyennes des notes pour chaque matière et la moyenne générale.
 
     Args:
         chaine_notes: La chaîne de caractères contenant les notes au format spécifié.
 
     Returns:
-        La moyenne générale calculée à partir des notes valides, ou une exception si aucune note valide n'a été trouvée.
+        Un dictionnaire contenant les notes, les moyennes pour chaque matière, et la moyenne générale.
 
     Raises:
         ValueError: Si une erreur se produit lors de l'analyse en raison d'un format invalide.
     """
-    matieres_notes = chaine_notes.split('#')
+    resultats = {}
     total_notes = 0
     nombre_matieres = 0
 
-    for matiere_note in matieres_notes:
+    for matiere_note in chaine_notes.split('#'):
         try:
             nom_matiere, notes = matiere_note.split('[')
             notes_devoirs, note_examen = notes.strip(']').split(':')
@@ -159,14 +159,26 @@ def calculer_moyennes(chaine_notes):
 
             # Vérifier si des notes de devoirs valides ont été trouvées
             if notes_devoirs:
+                # Conversion de la note d'examen en flottant
+                note_examen = float(note_examen) if float(note_examen) else 0
+
+                # Si la note d'examen est supérieure à 20, la mettre à zéro
+                if note_examen > 20:
+                    note_examen = 0
+
                 # Calcul de la moyenne des devoirs
                 moyenne_devoirs = sum(notes_devoirs) / len(notes_devoirs)
 
-                # Conversion de la note d'examen en flottant
-                note_examen = float(note_examen)
-
                 # Calcul de la moyenne selon la formule fournie
                 moyenne_matiere = (moyenne_devoirs + 2 * note_examen) / 3
+
+                # Stocker les résultats pour cette matière
+                resultats[nom_matiere] = {
+                    'notes_devoirs': notes_devoirs,
+                    'note_examen': note_examen,
+                    'moyenne': round(moyenne_matiere, 2)
+                }
+
                 total_notes += moyenne_matiere
                 nombre_matieres += 1
         except (ValueError, IndexError):
@@ -174,11 +186,14 @@ def calculer_moyennes(chaine_notes):
 
     # Calcul de la moyenne générale
     if nombre_matieres > 0:
-        moyenne_generale = round((total_notes / nombre_matieres),2)
+        moyenne_generale = round((total_notes / 6), 2)
     else:
         raise ValueError("Aucune note valide trouvée dans la chaîne d'entrée.")
 
-    return moyenne_generale
+    resultats['moyenne_generale'] = moyenne_generale
+
+    return resultats
+
 
 def valide_classe(classe):
     classe.replace(" ", "")
